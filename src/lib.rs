@@ -1,6 +1,6 @@
-//! Serializing indextree structure.
+//! Serializing `indextree` structure.
 //!
-//! # Usage
+//! ## Usage
 //!
 //! `serde_indextree` provides two struct: `Node` for serializing
 //! a node and its descendants, `SiblingNodes` for serializing a
@@ -53,14 +53,14 @@
 //! );
 //! ```
 //!
-//! # Customization
+//! ## Customization
 //!
 //! Unfortunately, `serde_indextree` doesn't come up with any customization.
 //!
 //! If you want to rename field names or anything, just copy the entire code
 //! (only 40+ lines) and modify it at your wish.
 //!
-//! # License
+//! ## License
 //!
 //! MIT
 

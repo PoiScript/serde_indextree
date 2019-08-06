@@ -1,5 +1,12 @@
 //! Serializing `indextree` structure.
 //!
+//! ## Version support
+//!
+//! | `indextree` version | `serde_indextree` version |
+//! |---------------------|---------------------------|
+//! | 3.3.x               | 0.1.x                     |
+//! | 4.0.x               | 0.2.x                     |
+//!
 //! ## Usage
 //!
 //! `serde_indextree` provides two struct: `Node` for serializing
@@ -10,47 +17,60 @@
 //! use indextree::Arena;
 //! use serde::Serialize;
 //! use serde_indextree::Node;
-//! use serde_json::to_string;
+//! use serde_json::to_string_pretty;
 //!
 //! #[derive(Serialize)]
 //! struct HtmlElement {
 //!     tag: &'static str
 //! }
 //!
-//! // <html><head><title></title><head><body><h1></h1><h2></h2></body></html>
+//! // <html>
+//! // <head>
+//! //     <title></title>
+//! // <head>
+//! // <body>
+//! //     <h1></h1>
+//! //     <h2></h2>
+//! // </body>
+//! // </html>
 //! let arena = &mut Arena::new();
 //! let a = arena.new_node(HtmlElement { tag: "html" });
 //! let b = arena.new_node(HtmlElement { tag: "head" });
-//! a.append(b, arena).unwrap();
+//! a.append(b, arena);
 //! let c = arena.new_node(HtmlElement { tag: "title" });
-//! b.append(c, arena).unwrap();
+//! b.append(c, arena);
 //! let d = arena.new_node(HtmlElement { tag: "body" });
-//! a.append(d, arena).unwrap();
+//! a.append(d, arena);
 //! let e = arena.new_node(HtmlElement { tag: "h1" });
-//! d.append(e, arena).unwrap();
+//! d.append(e, arena);
 //! let f = arena.new_node(HtmlElement { tag: "h2" });
-//! d.append(f, arena).unwrap();
+//! d.append(f, arena);
 //!
-//! assert_eq!(
-//!     to_string(&Node::new(a, arena)).unwrap(),
-//!     "{\
-//!         \"tag\": \"html\",\
-//!         \"children\": [\
-//!             {\
-//!                 \"tag\": \"head\",\
-//!                 \"children\": [\
-//!                     { \"tag\": \"title\" }\
-//!                 ]\
-//!             }, {\
-//!                 \"tag\": \"body\",\
-//!                 \"children\": [\
-//!                     { \"tag\": \"h1\" },\
-//!                     { \"tag\": \"h2\" }\
-//!                 ]\
-//!             }\
-//!         ]\
-//!     }"
-//! );
+//! println!("{}", to_string_pretty(&Node::new(a, arena)).unwrap());
+//! // {
+//! //   "tag": "html",
+//! //   "children": [
+//! //     {
+//! //       "tag": "head",
+//! //       "children": [
+//! //         {
+//! //           "tag": "title"
+//! //         }
+//! //       ]
+//! //     },
+//! //     {
+//! //       "tag": "body",
+//! //       "children": [
+//! //         {
+//! //           "tag": "h1"
+//! //         },
+//! //         {
+//! //           "tag": "h2"
+//! //         }
+//! //       ]
+//! //     }
+//! //   ]
+//! // }
 //! ```
 //!
 //! ## Customization
@@ -81,7 +101,7 @@ impl<'a, T: Serialize> Node<'a, T> {
     pub fn new(id: NodeId, arena: &'a Arena<T>) -> Self {
         let node = &arena[id];
         Node {
-            data: &node.data,
+            data: &node.get(),
             children: node
                 .first_child()
                 .map(|first| SiblingNodes::new(first, arena)),

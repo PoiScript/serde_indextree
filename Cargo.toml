@@ -1,6 +1,6 @@
 [package]
 name = "serde_indextree"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["PoiScript <poiscript@gmail.com>"]
 edition = "2018"
 description = "Serializing indextree structure."
@@ -10,7 +10,7 @@ license = "MIT"
 keywords = ["serde", "indextree"]
 
 [dependencies]
-indextree = "3.3.0"
+indextree = "4.0.0"
 serde = { version = "1.0.98", features = ["derive"] }
 
 [dev-dependencies]
